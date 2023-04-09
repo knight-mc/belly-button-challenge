@@ -43,40 +43,35 @@ function getData() {
 
 function setupBar(data, id, run){
   let data_id = Object.values(data.samples);
-  //let getOrgData = [];
   let sample_values = [];
   let otu_ids_temp = [];
   let otu_labels = [];
   let otu_ids = []; 
   
-  for (i = 0; i < (data_id.length - 1); i++) {
-    if (data_id[i].id == id){
-      let sample_ten = data_id[i];
-      if (sample_ten.length < 10){
-        for (i = 0; i < (sample_ten.length); i++) {
-          sample_values.push(sample_ten.sample_values[i]);
-          otu_ids_temp.push(sample_ten.otu_ids[i]);
-          otu_labels.push(sample_ten.otu_labels[i]);
-        }
-      }
-      else {
-        for (i = 0; i < 10; i++) {
-          sample_values.push(sample_ten.sample_values[i]);
-          otu_ids_temp.push(sample_ten.otu_ids[i]);
-          otu_labels.push(sample_ten.otu_labels[i]);
-        }
-      }
-      
+  let sample_ten = data_id.find(item => item.id === id);
 
-      for (i = 0; i < (otu_ids_temp.length); i++) {
-        let holdID = otu_ids_temp[i];
-        let newID = ("OTU " + String(holdID));
-        otu_ids.push(newID);
-      }
-
+  if (sample_ten.length < 10){
+    for (i = 0; i < (sample_ten.length); i++) {
+      sample_values.push(sample_ten.sample_values[i]);
+      otu_ids_temp.push(sample_ten.otu_ids[i]);
+      otu_labels.push(sample_ten.otu_labels[i]);
     }
   }
-  
+  else {
+    for (i = 0; i < 10; i++) {
+      sample_values.push(sample_ten.sample_values[i]);
+      otu_ids_temp.push(sample_ten.otu_ids[i]);
+      otu_labels.push(sample_ten.otu_labels[i]);
+    }
+  }
+      
+
+  for (i = 0; i < (otu_ids_temp.length); i++) {
+    let holdID = otu_ids_temp[i];
+    let newID = ("OTU " + String(holdID));
+    otu_ids.push(newID);
+  }
+
   sample_values.reverse();
   otu_ids.reverse();
   otu_labels.reverse();
@@ -114,15 +109,11 @@ function setupBubble(data, id, run){
   let bubCol = [];
   let bubOp = [];
   
-  for (i = 0; i < (data_id.length - 1); i++) {
-    if (data_id[i].id == id){
-      let sampleRow = data_id[i];
-      //console.log(sampleRow);
-      sample_values = Object.values(sampleRow.sample_values);
-      otu_labels = Object.values(sampleRow.otu_labels);
-      otu_ids = Object.values(sampleRow.otu_ids);
-      }
-    }
+  let sampleRow = data_id.find(item => item.id === id);
+  //console.log(sampleRow);
+  sample_values = Object.values(sampleRow.sample_values);
+  otu_labels = Object.values(sampleRow.otu_labels);
+  otu_ids = Object.values(sampleRow.otu_ids);
 
   for (i = 0; i < (otu_ids.length - 1); i++) {
     let idVal = otu_ids[i];
@@ -174,31 +165,21 @@ function setupBubble(data, id, run){
 function runDemo(data, id, run){
   let metadata = Object.values(data.metadata);
   let demo_pnl = d3.select(".panel-body");
+  let sampleMeta = metadata.find(item => item.id == id);
+  let mdRow = Object.entries(sampleMeta).map(pair => pair.flat());
   if (run == "init"){
-    for (i = 0; i < (metadata.length - 1); i++) {
-      if (metadata[i].id == id){
-        let mdRow = Object.entries(metadata[i]).map(pair => pair.flat());
-        //console.log(mdRow)
-        for (i = 0; i < (mdRow.length - 1); i++) {
-          //pull all key:value pairs and append them to lists
-          KVpair = mdRow[i];
-          demo_pnl.append("li").text(KVpair[0] + ": " + KVpair[1]);
-        }
+      for (i = 0; i < (mdRow.length - 1); i++) {
+        //pull all key:value pairs and append them to lists
+        KVpair = mdRow[i];
+        demo_pnl.append("li").text(KVpair[0] + ": " + KVpair[1]);
       }
-    }
   }
   else if (run == "update"){
     demo_pnl.selectAll("li").remove();
-    for (i = 0; i < (metadata.length - 1); i++) {
-      if (metadata[i].id == id){
-        let mdRow = Object.entries(metadata[i]).map(pair => pair.flat());
-        //console.log(mdRow)
         for (i = 0; i < (mdRow.length - 1); i++) {
           //pull all key:value pairs and append them to lists
           KVpair = mdRow[i];
           demo_pnl.append("li").text(KVpair[0] + ": " + KVpair[1]);
         }
-      }
-    }
   }
 }
