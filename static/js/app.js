@@ -8,7 +8,6 @@ d3.json(url).then(function(data) {
     init(data);
   });
 
-
 d3.selectAll("#selDataset").on("change", getData);  
 
 function setupDD(data) {
@@ -19,8 +18,7 @@ function setupDD(data) {
     dselect.append("option").attr("value", sampleID[i]).text(sampleID[i]);
 }
 
-
-  // Default Layout
+// Default Layout
 function  init(data) {
   let id = '940';
   let run = 'init';
@@ -38,7 +36,6 @@ function getData() {
     setupBar(dataset, newID, run);
     setupBubble(dataset, newID, run);
     runDemo(dataset, newID, run);
-  
 }
 
 function setupBar(data, id, run){
@@ -47,7 +44,6 @@ function setupBar(data, id, run){
   let otu_ids_temp = [];
   let otu_labels = [];
   let otu_ids = []; 
-  
   let sample_ten = data_id.find(item => item.id === id);
 
   if (sample_ten.length < 10){
@@ -65,7 +61,6 @@ function setupBar(data, id, run){
     }
   }
       
-
   for (i = 0; i < (otu_ids_temp.length); i++) {
     let holdID = otu_ids_temp[i];
     let newID = ("OTU " + String(holdID));
@@ -98,7 +93,6 @@ function setupBar(data, id, run){
   else if (run == "update"){
     Plotly.newPlot("bar", traceData, layout);
   }
-  
 }
 
 function setupBubble(data, id, run){
@@ -108,9 +102,7 @@ function setupBubble(data, id, run){
   let otu_labels; 
   let bubCol = [];
   let bubOp = [];
-  
   let sampleRow = data_id.find(item => item.id === id);
-  //console.log(sampleRow);
   sample_values = Object.values(sampleRow.sample_values);
   otu_labels = Object.values(sampleRow.otu_labels);
   otu_ids = Object.values(sampleRow.otu_ids);
@@ -159,7 +151,6 @@ function setupBubble(data, id, run){
   else if (run == "update"){
     Plotly.newPlot('bubble',BubData, layout);
   }
-
 } 
 
 function runDemo(data, id, run){
